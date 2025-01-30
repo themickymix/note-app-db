@@ -6,7 +6,6 @@ import User from "./models/user.model";
 const bcrypt = require("bcrypt");
 import jwt from "jsonwebtoken";
 import noteRouter from "./routes/note.route";
-import { authenticateToken } from "./middleware/auth";
 const cookieParser = require("cookie-parser");
 
 dotenv.config();
@@ -76,9 +75,9 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(process.env.PORT || 3001, () => {
-      console.log(
+      /*     console.log(
         `Server running on port http://localhost:${process.env.PORT || 3001}`
-      ); 
+      ); */
     });
   })
   .catch((error) => {
