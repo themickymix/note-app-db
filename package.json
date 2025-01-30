@@ -144,8 +144,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
-    "test": "node src/index.ts"
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts"
   },
   "keywords": [],
   "author": "",
