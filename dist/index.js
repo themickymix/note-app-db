@@ -50,8 +50,8 @@ app.use(express_1.default.urlencoded({ extended: true }));
 ); */
 //test lang
 app.use(cors({
-    origin: "http://localhost:3000",
-    credentials: true,
+    origin: ["https://noteapp-lake.vercel.app/"], // Replace with your allowed origins
+    credentials: true, // Allow credentials to be sent
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: [
         "Content-Type",

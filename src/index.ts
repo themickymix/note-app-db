@@ -39,8 +39,8 @@ app.use(express.urlencoded({ extended: true }));
 //test lang
 app.use(
   cors({
-    origin: "*",
-    credentials: true,
+    origin: ["https://noteapp-lake.vercel.app/"], // Replace with your allowed origins
+    credentials: true, // Allow credentials to be sent
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: [
       "Content-Type",
@@ -51,6 +51,7 @@ app.use(
     ],
   })
 );
+
 app.options("*", cors()); // Handle preflight requests
 
 // Routes
