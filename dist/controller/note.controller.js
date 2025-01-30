@@ -29,6 +29,7 @@ const getAllNotes = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getAllNotes = getAllNotes;
 // Get a note by ID
 const getNoteById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.user); // Add this to verify user authentication
     try {
         const note = yield note_model_1.default.findOne({ _id: req.params.id, user: req.user._id });
         if (!note) {
@@ -97,7 +98,7 @@ const deleteNote = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const { id } = req.params;
         const note = yield note_model_1.default.findOneAndDelete({
             _id: id,
-            user: req.user._id
+            user: req.user._id,
         });
         if (!note) {
             return res.status(404).json({ message: "Note not found" });

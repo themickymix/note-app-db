@@ -3,7 +3,10 @@ import { body, validationResult } from "express-validator";
 import Note from "../models/note.model";
 
 // Get all notes for the authenticated user
-const getAllNotes = async (req: Request & { user: { _id: string } }, res: Response) => {
+const getAllNotes = async (
+  req: Request & { user: { _id: string } },
+  res: Response
+) => {
   try {
     const notes = await Note.find({ user: req.user._id });
     res.status(200).json(notes);
@@ -15,7 +18,11 @@ const getAllNotes = async (req: Request & { user: { _id: string } }, res: Respon
 };
 
 // Get a note by ID
-const getNoteById = async (req: Request & { user: { _id: string } }, res: Response) => {
+const getNoteById = async (
+  req: Request & { user: { _id: string } },
+  res: Response
+) => {
+  console.log(req.user); // Add this to verify user authentication
   try {
     const note = await Note.findOne({ _id: req.params.id, user: req.user._id });
     if (!note) {
@@ -91,9 +98,9 @@ const editNote = async (req: Request, res: Response) => {
 const deleteNote = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const note = await Note.findOneAndDelete({ 
-      _id: id, 
-      user: (req as Request & { user: { _id: string } }).user._id 
+    const note = await Note.findOneAndDelete({
+      _id: id,
+      user: (req as Request & { user: { _id: string } }).user._id,
     });
 
     if (!note) {
