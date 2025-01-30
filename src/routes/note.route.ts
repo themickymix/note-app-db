@@ -12,7 +12,7 @@ const { authenticateToken } = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/", authenticateToken, getAllNotes);
-router.get("/:id", authenticateToken, getNoteById);
+router.get("/note/:id", authenticateToken, getNoteById);
 router.post("/", authenticateToken, addNewNote);
 router.put("/:id", authenticateToken, editNote);
 router.delete("/:id", authenticateToken, deleteNote);
