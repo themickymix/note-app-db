@@ -10,7 +10,7 @@ const router = express_1.default.Router();
 router.get("/", authenticateToken, getAllNotes);
 router.get("/note/:id", authenticateToken, getNoteById);
 router.post("/", authenticateToken, addNewNote);
-router.put("/:id", authenticateToken, editNote);
-router.delete("/:id", authenticateToken, deleteNote);
+router.put("/note/:id", authenticateToken, editNote);
+router.delete("/note/:id", authenticateToken, deleteNote);
 exports.default = router;
 //# sourceMappingURL=note.route.js.map
