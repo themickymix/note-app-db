@@ -50,7 +50,7 @@ app.use(express_1.default.urlencoded({ extended: true }));
 ); */
 //test lang
 app.use(cors({
-    origin: ["https://noteapp-lake.vercel.app/"], // Replace with your allowed origins
+    origin: ["https://noteapp-lake.vercel.app"], // Remove the trailing slash
     credentials: true, // Allow credentials to be sent
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: [
