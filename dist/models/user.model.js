@@ -50,6 +50,7 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true,
     },
     password: {
         type: String,
@@ -62,6 +63,7 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true,
     },
 }, { timestamps: true });
 UserSchema.pre("save", function (next) {
