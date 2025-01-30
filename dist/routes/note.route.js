@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const { getAllNotes, getNoteById, addNewNote, editNote, deleteNote, } = require("../controller/note.controller");
-const { authenticateToken } = require("../middleware/auth.ts");
+const { authenticateToken } = require("../middleware/auth");
 const router = express_1.default.Router();
 router.get("/", authenticateToken, getAllNotes);
 router.get("/:id", authenticateToken, getNoteById);
