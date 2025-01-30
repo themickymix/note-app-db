@@ -54,7 +54,7 @@ app.use(
 app.options("*", cors()); // Handle preflight requests
 
 // Routes
-app.use("/api/v1/", noteRouter);
+app.use("/api/v1", noteRouter);
 
 const verifyToken = async (req: any, res: any, next: any) => {
   const token = req.cookies.jwt;

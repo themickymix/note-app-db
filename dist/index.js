@@ -63,7 +63,7 @@ app.use(cors({
 }));
 app.options("*", cors()); // Handle preflight requests
 // Routes
-app.use("/api/v1/", note_route_1.default);
+app.use("/api/v1", note_route_1.default);
 const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.cookies.jwt;
     if (!token)
