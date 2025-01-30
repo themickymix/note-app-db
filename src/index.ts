@@ -76,9 +76,9 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(process.env.PORT || 3001, () => {
-      /*     console.log(
+      console.log(
         `Server running on port http://localhost:${process.env.PORT || 3001}`
-      ); */
+      ); 
     });
   })
   .catch((error) => {
