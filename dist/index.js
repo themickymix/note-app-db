@@ -94,10 +94,11 @@ mongoose_1.default
 // Register Route
 app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, password } = req.body;
+    const trimmedPassword = password.trim();
     try {
         // Hash the password using async/await
         const salt = yield bcryptjs.genSalt(10);
-        const hashedPassword = yield bcryptjs.hash(password, salt);
+        const hashedPassword = yield bcryptjs.hash(trimmedPassword, salt);
         // Create the user with the hashed password
         const user = yield user_model_1.default.create({
             username,
@@ -123,6 +124,7 @@ app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* 
 // Login Route
 app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
+    const trimmedPassword = password.trim();
     try {
         // Find the user by email
         const user = yield user_model_1.default.findOne({ email: email });
@@ -130,7 +132,7 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             return res.status(404).json({ message: "User not found." });
         }
         // Compare the provided password with the hashed password
-        const isMatch = yield bcryptjs.compare(password, user.password);
+        const isMatch = yield bcryptjs.compare(trimmedPassword, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Incorrect password." });
         }

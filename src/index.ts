@@ -88,11 +88,11 @@ mongoose
 // Register Route
 app.post("/register", async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
-
+  const trimmedPassword = password.trim();
   try {
     // Hash the password using async/await
     const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(password, salt);
+    const hashedPassword = await bcryptjs.hash(trimmedPassword, salt);
 
     // Create the user with the hashed password
     const user = await User.create({
@@ -125,7 +125,7 @@ app.post("/register", async (req: Request, res: Response) => {
 // Login Route
 app.post("/login", async (req: any, res: any) => {
   const { email, password } = req.body;
-
+const trimmedPassword = password.trim();
   try {
     // Find the user by email
     const user = await User.findOne({ email: email });
@@ -134,7 +134,7 @@ app.post("/login", async (req: any, res: any) => {
     }
 
     // Compare the provided password with the hashed password
-    const isMatch = await bcryptjs.compare(password, user.password);
+    const isMatch = await bcryptjs.compare(trimmedPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password." });
     }
