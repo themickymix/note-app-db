@@ -86,79 +86,99 @@ mongoose
   });
 
 // Register Route
-app.post("/register", async (req: Request, res: Response) => {
+app.post("/register", (req: Request, res: Response) => {
   const { username, email, password } = req.body;
-  const trimmedPassword = password.trim();
-  try {
-    // Hash the password using async/await
-    const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(trimmedPassword, salt);
 
-    // Create the user with the hashed password
-    const user = await User.create({
-      username,
-      email,
-      password: hashedPassword,
+  // Generate salt and hash the password
+  bcryptjs.genSalt(10, (err: any, salt: any) => {
+    if (err) {
+      console.error("Error generating salt:", err);
+      return res.status(500).json({ message: "Error generating salt." });
+    }
+
+    bcryptjs.hash(password, salt, async (err: any, hash: any) => {
+      if (err) {
+        console.error("Error hashing password:", err);
+        return res.status(500).json({ message: "Error hashing password." });
+      }
+
+      try {
+        // Create the user with the hashed password
+        const user = await User.create({
+          username,
+          email,
+          password: hash,
+        });
+
+        // Generate JWT token
+        const token = jwt.sign(
+          { id: user._id, email: user.email },
+          process.env.JWT_SECRET as string,
+          { expiresIn: "7d" }
+        );
+
+        // Set cookie and send response
+        res.cookie("jwt", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        });
+
+        res
+          .status(201)
+          .json({ message: "User registered successfully", token });
+      } catch (err) {
+        console.error("Error during registration:", err);
+        res.status(500).json({ message: "Error creating user." });
+      }
     });
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "7d" }
-    );
-
-    // Set cookie and send response
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-    });
-
-    res.status(201).json({ message: "User registered successfully", token });
-  } catch (err) {
-    console.error("Error during registration:", err);
-    res.status(500).json({ message: "Error creating user." });
-  }
+  });
 });
 // Login Route
-app.post("/login", async (req: any, res: any) => {
+app.post("/login", (req: Request, res: Response) => {
   const { email, password } = req.body;
-const trimmedPassword = password.trim();
-  try {
-    // Find the user by email
-    const user = await User.findOne({ email: email });
+
+  // Find the user by email
+  User.findOne({ email: email }, (err: any, user: any) => {
+    if (err) {
+      console.error("Error finding user:", err);
+      return res.status(500).json({ message: "Error finding user." });
+    }
+
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Compare the provided password with the hashed password
-    const isMatch = await bcryptjs.compare(trimmedPassword, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Incorrect password." });
-    }
+    // Compare the provided password with the stored hash
+    bcryptjs.compare(password, user.password, (err: any, isMatch: any) => {
+      if (err) {
+        console.error("Error comparing passwords:", err);
+        return res.status(500).json({ message: "Error comparing passwords." });
+      }
 
-    // Generate JWT token ONLY if password matches
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "7d" }
-    );
+      if (!isMatch) {
+        return res.status(401).json({ message: "Incorrect password." });
+      }
 
-    // Set JWT cookie
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET as string,
+        { expiresIn: "7d" }
+      );
+
+      // Set JWT cookie
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      });
+
+      res.status(200).json({ message: "Login successful", token });
     });
-
-    res.status(200).json({ message: "Login successful", token });
-  } catch (err) {
-    console.error("Error during login:", err);
-    res.status(500).json({ message: "Error logging in." });
-  }
+  });
 });
 // Logout Route
 app.post("/logout", (req: Request, res: Response) => {
