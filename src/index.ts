@@ -134,22 +134,13 @@ app.post("/login", async (req: any, res: any) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Compare the provided password with the hashed password in the database
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password,
-      function (err: any, result: any) {
-        if (err) {
-          console.error("Error comparing passwords:", err);
-          return res
-            .status(500)
-            .json({ message: "Error comparing passwords." });
-        }
-        return result;
-      }
-    );
+    // Correctly compare the provided password with the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect password." });
+    }
 
-    // Generate JWT token
+    // Generate JWT token ONLY if password matches
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET as string,
