@@ -129,7 +129,7 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        // Correctly compare the provided password with the hashed password
+        // Compare the provided password with the hashed password
         const isMatch = yield bcryptjs.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Incorrect password." });

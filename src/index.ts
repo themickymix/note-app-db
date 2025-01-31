@@ -86,7 +86,7 @@ mongoose
   });
 
 // Register Route
-app.post("/register", async (req: any, res: any) => {
+app.post("/register", async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
   try {
@@ -133,7 +133,7 @@ app.post("/login", async (req: any, res: any) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Correctly compare the provided password with the hashed password
+    // Compare the provided password with the hashed password
     const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password." });
@@ -160,7 +160,6 @@ app.post("/login", async (req: any, res: any) => {
     res.status(500).json({ message: "Error logging in." });
   }
 });
-
 // Logout Route
 app.post("/logout", (req: Request, res: Response) => {
   res.clearCookie("jwt", {
