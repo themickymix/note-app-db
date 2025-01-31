@@ -97,7 +97,7 @@ app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         // Hash the password using async/await
         const salt = yield bcryptjs.genSalt(10);
-        const hashedPassword = yield bcryptjs.hashSync(password, salt);
+        const hashedPassword = yield bcryptjs.hash(password, salt);
         // Create the user with the hashed password
         const user = yield user_model_1.default.create({
             username,
@@ -130,15 +130,7 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             return res.status(404).json({ message: "User not found." });
         }
         // Correctly compare the provided password with the hashed password
-        const isMatch = yield bcryptjs.compare(password, user.password, function (err, result) {
-            if (err) {
-                console.error("Error comparing passwords:", err);
-                return res
-                    .status(500)
-                    .json({ message: "Error comparing passwords." });
-            }
-            return result;
-        });
+        const isMatch = yield bcryptjs.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Incorrect password." });
         }

@@ -86,13 +86,13 @@ mongoose
   });
 
 // Register Route
-app.post("/register", async (req: Request, res: Response) => {
+app.post("/register", async (req: any, res: any) => {
   const { username, email, password } = req.body;
 
   try {
     // Hash the password using async/await
-  const salt = await bcryptjs.genSalt(10); 
-    const hashedPassword = await bcryptjs.hashSync(password, salt);
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
 
     // Create the user with the hashed password
     const user = await User.create({
@@ -122,7 +122,6 @@ app.post("/register", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error creating user." });
   }
 });
-
 // Login Route
 app.post("/login", async (req: any, res: any) => {
   const { email, password } = req.body;
@@ -135,20 +134,7 @@ app.post("/login", async (req: any, res: any) => {
     }
 
     // Correctly compare the provided password with the hashed password
-
-    const isMatch = await bcryptjs.compare(
-      password,
-      user.password,
-      function (err: any, result: any) {
-        if (err) {
-          console.error("Error comparing passwords:", err);
-          return res
-            .status(500)
-            .json({ message: "Error comparing passwords." });
-        }
-        return result;
-      }
-    );
+    const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password." });
     }
