@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const cors = require("cors");
 import dotenv from "dotenv";
 import User from "./models/user.model";
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 import jwt from "jsonwebtoken";
 import noteRouter from "./routes/note.route";
 const cookieParser = require("cookie-parser");
@@ -91,8 +91,8 @@ app.post("/register", async (req: Request, res: Response) => {
 
   try {
     // Hash the password using async/await
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+  const salt = await bcryptjs.genSalt(10); 
+    const hashedPassword = await bcryptjs.hashSync(password, salt);
 
     // Create the user with the hashed password
     const user = await User.create({
@@ -136,7 +136,7 @@ app.post("/login", async (req: any, res: any) => {
 
     // Correctly compare the provided password with the hashed password
 
-    const isMatch = await bcrypt.compare(
+    const isMatch = await bcryptjs.compare(
       password,
       user.password,
       function (err: any, result: any) {

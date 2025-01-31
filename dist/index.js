@@ -17,7 +17,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cors = require("cors");
 const dotenv_1 = __importDefault(require("dotenv"));
 const user_model_1 = __importDefault(require("./models/user.model"));
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const note_route_1 = __importDefault(require("./routes/note.route"));
 const cookieParser = require("cookie-parser");
@@ -96,8 +96,8 @@ app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const { username, email, password } = req.body;
     try {
         // Hash the password using async/await
-        const salt = yield bcrypt.genSalt(10);
-        const hashedPassword = yield bcrypt.hash(password, salt);
+        const salt = yield bcryptjs.genSalt(10);
+        const hashedPassword = yield bcryptjs.hashSync(password, salt);
         // Create the user with the hashed password
         const user = yield user_model_1.default.create({
             username,
@@ -130,7 +130,7 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             return res.status(404).json({ message: "User not found." });
         }
         // Correctly compare the provided password with the hashed password
-        const isMatch = yield bcrypt.compare(password, user.password, function (err, result) {
+        const isMatch = yield bcryptjs.compare(password, user.password, function (err, result) {
             if (err) {
                 console.error("Error comparing passwords:", err);
                 return res
