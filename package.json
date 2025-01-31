@@ -4,12 +4,14 @@
   "main": "index.js",
   "dependencies": {
     "@clerk/clerk-sdk-node": "^5.1.6",
+    "@types/argon2": "^0.14.1",
     "@types/bcryptjs": "^2.4.6",
     "accepts": "^1.3.8",
     "acorn": "^8.14.0",
     "acorn-walk": "^8.3.4",
     "anymatch": "^3.1.3",
     "arg": "^4.1.3",
+    "argon2": "^0.41.1",
     "array-flatten": "^1.1.1",
     "balanced-match": "^1.0.2",
     "bcrypt": "^5.1.1",
@@ -145,7 +147,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "aaa": "nodemon src/index.ts"
   },
   "keywords": [],
   "author": "",
