@@ -135,7 +135,20 @@ app.post("/login", async (req: any, res: any) => {
     }
 
     // Correctly compare the provided password with the hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
+
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password,
+      function (err: any, result: any) {
+        if (err) {
+          console.error("Error comparing passwords:", err);
+          return res
+            .status(500)
+            .json({ message: "Error comparing passwords." });
+        }
+        return result;
+      }
+    );
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password." });
     }
