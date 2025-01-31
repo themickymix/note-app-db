@@ -128,22 +128,22 @@ app.post("/login", async (req: any, res: any): Promise<any> => {
   try {
     if (await argon2.verify(user.password, password)) {
       // Generate JWT token
+      // Generate JWT token
       const token = jwt.sign(
-        { userId: user._id, email: user.email }, // Include user ID for better identification
+        { id: user._id, email: user.email },
         process.env.JWT_SECRET as string,
         { expiresIn: "7d" }
       );
 
-      // Set JWT cookie
+      // Set cookie and send response
       res.cookie("jwt", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Ensure cookies are only sent over HTTPS in production
+        secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
       });
-
       // Respond with success message (avoid sending the token in the response body for security)
-      res.status(200).json({ message: "Login successful" });
+      res.status(200).json({ message: "Login successful", token });
     } else {
       // Unauthorized
       res.status(401).json({ message: "Invalid credentials." });
